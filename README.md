@@ -146,7 +146,7 @@ public class SimpleJdbcDemoApplication implements CommandLineRunner {
 
 2. 克隆專案
 ```bash
-git clone <repository-url>
+git clone https://github.com/SpringMicroservicesCourse/simple-jdbc-demo
 cd simple-jdbc-demo
 ```
 
