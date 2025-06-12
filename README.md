@@ -1,13 +1,13 @@
-# Spring JDBC Demo Project
+# Spring JDBC 範例專案
 
-這是一個展示 Spring JDBC 基本用法的示範專案。
+這是一個示範如何使用 Spring JDBC 的簡單專案。
 
-## 功能特點
+## 功能特色
 
-- 使用 Spring JDBC Template 進行數據庫操作
-- 展示基本的 CRUD 操作
-- 包含批量處理示例
-- 使用 H2 內存數據庫
+- 使用 Spring JDBC Template 進行資料庫操作
+- 展示基本的 CRUD（新增、查詢、更新、刪除）操作
+- 包含批次處理範例
+- 採用 H2 內存資料庫
 
 ## 技術棧
 
@@ -18,23 +18,23 @@
 - Lombok
 - Maven
 
-## 項目結構
+## 專案結構
 
 ```
 src/main/java/tw/fengqing/spring/data/demo/
-├── SimpleJdbcDemoApplication.java  # 應用程序入口
-├── FooDao.java                     # 基本 JDBC 操作示例
-├── BatchFooDao.java               # 批量操作示例
-└── Foo.java                       # 數據模型
+├── SimpleJdbcDemoApplication.java  # 應用程式入口
+├── FooDao.java                     # 基本 JDBC 操作範例
+├── BatchFooDao.java                # 批次操作範例
+└── Foo.java                       # 資料模型
 
 src/main/resources/
-├── schema.sql                     # 數據庫表結構
-└── data.sql                       # 初始數據
+├── schema.sql                     # 資料庫表結構
+└── data.sql                       # 初始資料
 ```
 
 ## 重要程式碼說明
 
-### 1. 數據模型 (Foo.java)
+### 1. 資料模型 (Foo.java)
 ```java
 @Data
 @Builder
@@ -51,7 +51,7 @@ public class FooDao {
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert simpleJdbcInsert;
 
-    // 構造函數注入
+    // 建構子注入
     public FooDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
@@ -59,41 +59,41 @@ public class FooDao {
                 .usingGeneratedKeyColumns("ID");
     }
 
-    // 插入數據示例
+    // 新增資料範例
     public void insertData() {
-        // 使用 JdbcTemplate 插入
+        // 使用 JdbcTemplate 新增
         Arrays.asList("b", "c").forEach(bar -> {
             jdbcTemplate.update("INSERT INTO FOO (BAR) VALUES (?)", bar);
         });
 
-        // 使用 SimpleJdbcInsert 插入
+        // 使用 SimpleJdbcInsert 新增
         HashMap<String, String> row = new HashMap<>();
         row.put("BAR", "d");
         Number id = simpleJdbcInsert.executeAndReturnKey(row);
     }
 
-    // 查詢數據示例
+    // 查詢資料範例
     public void listData() {
-        log.info("Count: {}", 
+        log.info("資料筆數: {}", 
             jdbcTemplate.queryForObject("SELECT COUNT(*) FROM FOO", Long.class));
     }
 }
 ```
 
-### 3. 批量操作 (BatchFooDao.java)
+### 3. 批次操作 (BatchFooDao.java)
 ```java
 @Repository
 public class BatchFooDao {
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    // 構造函數注入
+    // 建構子注入
     public BatchFooDao(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
 
-    // 批量插入示例
+    // 批次新增範例
     public void batchInsert() {
         // 使用 BatchPreparedStatementSetter
         jdbcTemplate.batchUpdate("INSERT INTO FOO (BAR) VALUES (?)",
@@ -121,7 +121,7 @@ public class BatchFooDao {
 }
 ```
 
-### 4. 應用入口 (SimpleJdbcDemoApplication.java)
+### 4. 應用程式入口 (SimpleJdbcDemoApplication.java)
 ```java
 @SpringBootApplication
 @Slf4j
@@ -142,15 +142,15 @@ public class SimpleJdbcDemoApplication implements CommandLineRunner {
 
 ## 快速開始
 
-1. 確保已安裝 Java 17 和 Maven
+1. 確認已安裝 Java 17 與 Maven
 
-2. 克隆專案
+2. 下載專案
 ```bash
-git clone <repository-url>
+git clone https://github.com/SpringMicroservicesCourse/simple-jdbc-demo
 cd simple-jdbc-demo
 ```
 
-3. 運行應用程序
+3. 執行專案
 ```bash
 mvn spring-boot:run
 ```
@@ -158,15 +158,15 @@ mvn spring-boot:run
 ## 主要功能說明
 
 1. 基本 JDBC 操作 (FooDao.java)
-   - 插入數據
-   - 查詢記錄數
-   - 使用 SimpleJdbcInsert
+   - 新增資料
+   - 查詢資料筆數
+   - 使用 SimpleJdbcInsert 簡化新增
 
-2. 批量操作 (BatchFooDao.java)
-   - 批量插入
+2. 批次操作 (BatchFooDao.java)
+   - 批次新增資料
    - 使用 NamedParameterJdbcTemplate
 
-## 數據庫結構
+## 資料庫結構
 
 ```sql
 CREATE TABLE FOO (
@@ -175,25 +175,25 @@ CREATE TABLE FOO (
 );
 ```
 
-## 代碼亮點
+## 程式碼亮點
 
-1. **依賴注入最佳實踐**
-   - 使用構造函數注入而不是字段注入
-   - 避免循環依賴
+1. **依賴注入最佳實務**
+   - 採用建構子注入，避免欄位注入
+   - 避免循環依賴問題
 
-2. **JDBC 操作多樣性**
+2. **多元 JDBC 操作**
    - JdbcTemplate 基本操作
-   - SimpleJdbcInsert 便捷插入
+   - SimpleJdbcInsert 方便插入
    - NamedParameterJdbcTemplate 命名參數
-   - 批量操作示例
+   - 批次操作範例
 
-3. **代碼設計**
-   - 使用 Lombok 減少樣板代碼
-   - 遵循 Spring 最佳實踐
-   - 清晰的職責分離
+3. **程式設計**
+   - 使用 Lombok 減少樣板程式碼
+   - 遵循 Spring 最佳實務
+   - 清楚職責分工
 
 ## 注意事項
 
-- 使用 H2 內存數據庫，應用重啟後數據會重置
-- 專案包含示例數據，存儲在 data.sql 中
-- 使用 Lombok，請確保 IDE 已安裝 Lombok 插件 
+- 使用 H2 內存資料庫，應用程式重啟後資料會清空
+- 專案內含範例資料，存放於 data.sql
+- 使用 Lombok，請確保 IDE 已安裝 Lombok 外掛
