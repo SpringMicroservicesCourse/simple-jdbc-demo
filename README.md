@@ -197,3 +197,7 @@ CREATE TABLE FOO (
 - 使用 H2 內存資料庫，應用程式重啟後資料會清空
 - 專案內含範例資料，存放於 data.sql
 - 使用 Lombok，請確保 IDE 已安裝 Lombok 外掛
+
+## 授權說明
+
+本專案採用 MIT 授權條款，詳見 LICENSE 檔案。 
