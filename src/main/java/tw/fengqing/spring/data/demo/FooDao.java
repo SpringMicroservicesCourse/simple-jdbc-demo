@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import org.springframework.lang.NonNull;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,7 +23,8 @@ public class FooDao {
     public FooDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("FOO").usingGeneratedKeyColumns("ID");
+            .withTableName("FOO")
+            .usingGeneratedKeyColumns("ID");
     }
 
     public void insertData() {
@@ -45,7 +47,7 @@ public class FooDao {
 
         List<Foo> fooList = jdbcTemplate.query("SELECT * FROM FOO", new RowMapper<Foo>() {
             @Override
-            public Foo mapRow(ResultSet rs, int rowNum) throws SQLException {
+            public Foo mapRow(@NonNull ResultSet rs, int rowNum) throws SQLException {
                 return Foo.builder()
                         .id(rs.getLong(1))
                         .bar(rs.getString(2))

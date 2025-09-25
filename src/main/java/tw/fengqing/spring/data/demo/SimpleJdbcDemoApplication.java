@@ -6,9 +6,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 import javax.sql.DataSource;
 
@@ -18,16 +16,10 @@ public class SimpleJdbcDemoApplication implements CommandLineRunner {
     @Autowired
     private FooDao fooDao;
     @Autowired
-    private BatchFooDao batchFooDao;
+    private BatchFooDao batchFooDao; // 演示2批次操作範例
 
     public static void main(String[] args) {
         SpringApplication.run(SimpleJdbcDemoApplication.class, args);
-    }
-
-    @Bean
-    public SimpleJdbcInsert simpleJdbcInsert(JdbcTemplate jdbcTemplate) {
-        return new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("FOO").usingGeneratedKeyColumns("ID");
     }
 
     @Bean
@@ -37,10 +29,12 @@ public class SimpleJdbcDemoApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        fooDao.insertData();
+        // 演示1使用JdbcTemplate執行單條SQL語句
+        // fooDao.insertData();
+        // 演示2使用SimpleJdbcInsert執行批次SQL語句
         batchFooDao.batchInsert();
         fooDao.listData();
-    }
+    } 
 
 }
 
